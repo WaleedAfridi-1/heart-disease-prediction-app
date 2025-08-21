@@ -58,15 +58,15 @@ An interactive **Streamlit web application** powered by **XGBoost** that predict
 
 ## 📂 Project Structure
 heart-disease-prediction-app/
-│
-├── model/
-│   └── heart_disease_model.pkl    # Trained XGBoost model
-│
-├── app.py                         # Main Streamlit application
-├── requirements.txt               # Dependencies
-├── README.md                      # Project documentation
-│
-└── assets/                        # Images, CSS, etc.
+- │
+- ├── model/
+- │   └── heart_disease_model.pkl    # Trained XGBoost model
+- │
+- ├── app.py                         # Main Streamlit application
+- ├── requirements.txt               # Dependencies
+- ├── README.md                      # Project documentation
+- │
+- └── assets/                        # Images, CSS, etc.
 
 
 ---
@@ -75,7 +75,7 @@ heart-disease-prediction-app/
 
 ### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/your-username/heart-disease-prediction-app.git
+git clone https://github.com/WaleedAfridi-1/heart-disease-prediction-app.git
 cd heart-disease-prediction-app
 ```
 
