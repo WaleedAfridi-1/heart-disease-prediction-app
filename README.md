@@ -60,7 +60,7 @@ An interactive **Streamlit web application** powered by **XGBoost** that predict
 heart-disease-prediction-app/
 - │
 - ├── model/
-- │   └── heart_disease_model.pkl    # Trained XGBoost model
+- │   └── xgboost_model.pkl    # Trained XGBoost model
 - │
 - ├── app.py                         # Main Streamlit application
 - ├── requirements.txt               # Dependencies
