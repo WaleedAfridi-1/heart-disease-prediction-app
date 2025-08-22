@@ -104,7 +104,7 @@ st.markdown("""
             padding: 25px;
             border-radius: 15px;
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
             margin-top: 20px;
             animation: pulse 2s infinite;
@@ -117,7 +117,7 @@ st.markdown("""
             padding: 25px;
             border-radius: 15px;
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
             margin-top: 20px;
             animation: pulse 2s infinite;
@@ -154,36 +154,27 @@ st.markdown("""
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         
-        .risk-meter {
-            width: 100%;
-            height: 30px;
-            background: #e9ecef;
+        .doctor-advice {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 20px;
             border-radius: 15px;
-            overflow: hidden;
+            border-left: 5px solid #2196f3;
             margin: 20px 0;
         }
         
-        .risk-fill {
-            height: 100%;
+        .warning-box {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            padding: 20px;
             border-radius: 15px;
-            background: linear-gradient(90deg, #51cf66, #f8f9fa, #ff6b6b);
-            transition: width 1s ease-in-out;
+            border-left: 5px solid #f44336;
+            margin: 20px 0;
         }
         
-        .feature-importance {
-            margin-top: 30px;
-        }
-        
-        .feature-bar {
-            height: 25px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            background: linear-gradient(90deg, #4c68d7, #3b5bdb);
-            transition: width 1s ease-in-out;
-        }
-        
-        .prediction-animation {
-            text-align: center;
+        .success-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #4caf50;
             margin: 20px 0;
         }
         
@@ -274,11 +265,7 @@ st.markdown("""
             
             .result-positive, .result-negative {
                 padding: 15px;
-                font-size: 1.1rem;
-            }
-            
-            .metric-value {
-                font-size: 1.4rem;
+                font-size: 1.3rem;
             }
         }
     </style>
@@ -342,8 +329,11 @@ with st.sidebar:
     """)
     
     st.markdown("---")
-    st.markdown("### About")
-    st.write("This app uses a machine learning model to predict the likelihood of heart disease based on patient health metrics.")
+    st.markdown("### Important Note")
+    st.warning("""
+    This tool is for preliminary assessment only.
+    Always consult a healthcare professional for proper diagnosis.
+    """)
 
 # ---------------------------
 # Main Content
@@ -443,11 +433,9 @@ if st.button("Predict Heart Disease Risk"):
     if model is None or scaler is None:
         st.error("Model or scaler not loaded. Please check that the model files are available.")
     else:
-        # Create a placeholder for the loading animation
+        # Loading animation placeholder
         loading_placeholder = st.empty()
-        
         with loading_placeholder.container():
-            # Show CSS-based loading animation
             st.markdown("""
                 <div style='text-align: center; padding: 20px;'>
                     <div class="loading-animation"></div>
@@ -459,68 +447,72 @@ if st.button("Predict Heart Disease Risk"):
         input_data = np.array([[age, sex, cp, trestbps, chol, fbs, restecg,
                                 thalach, exang, oldpeak, slope, ca, thal]])
         
-        # Scale the input data
+        # Scale input
         scaled_data = scaler.transform(input_data)
         
         # Make prediction
         prediction = model.predict(scaled_data)
-        prediction_proba = model.predict_proba(scaled_data)
         
-        # Calculate risk percentage
-        risk_percentage = prediction_proba[0][1] * 100
-        
-        # Clear the loading animation
+        # Clear loading animation
         loading_placeholder.empty()
         
-        # Display results
+        # Show result based on prediction
         if prediction[0] == 1:
-            st.markdown(f'<div class="result-positive">⚠️ High Risk of Heart Disease ({risk_percentage:.1f}% probability)</div>', unsafe_allow_html=True)
+            st.markdown('<div class="result-positive">⚠️ Heart Disease Detected</div>', unsafe_allow_html=True)
             
-            st.warning("""
-            **Recommendations:**
-            - Consult a cardiologist as soon as possible
-            - Adopt a heart-healthy diet low in saturated fats
-            - Engage in regular physical activity as recommended by your doctor
-            - Monitor your blood pressure and cholesterol regularly
-            - Consider stress reduction techniques
+            st.markdown('<div class="warning-box">', unsafe_allow_html=True)
+            st.markdown("### 🚨 Immediate Doctor Consultation Recommended")
+            st.markdown("""
+            **Our analysis indicates possible heart disease risk factors.**
+            
+            **Please consult a cardiologist for:**
+            - Comprehensive medical evaluation
+            - Further diagnostic tests (ECG, stress test, echocardiogram)
+            - Professional medical advice and treatment plan
             """)
-        else:
-            st.markdown(f'<div class="result-negative">✅ Low Risk of Heart Disease ({risk_percentage:.1f}% probability)</div>', unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
             
-            st.success("""
-            **Keep up the good work:**
-            - Maintain a balanced diet and healthy weight
-            - Continue regular physical activity
-            - Avoid smoking and limit alcohol consumption
-            - Schedule regular health check-ups
+            st.markdown('<div class="doctor-advice">', unsafe_allow_html=True)
+            st.markdown("### 📋 Before Visiting Doctor")
+            st.markdown("""
+            - Note down all your symptoms and their frequency
+            - Prepare your medical history and current medications list
+            - Avoid strenuous activities until consultation
+            - Monitor your blood pressure regularly
+            """)
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+        else:
+            st.markdown('<div class="result-negative">✅ No Heart Disease Detected</div>', unsafe_allow_html=True)
+            
+            st.markdown('<div class="success-box">', unsafe_allow_html=True)
+            st.markdown("### 👍 Good Heart Health")
+            st.markdown("""
+            **Our analysis shows no signs of heart disease.**
+            
+            **To maintain good heart health:**
+            - Continue regular health check-ups
+            - Maintain balanced diet and healthy weight
+            - Exercise regularly
+            - Avoid smoking and limit alcohol
             - Manage stress effectively
             """)
-        
-        # Display risk meter
-        st.markdown("### Risk Assessment")
-        st.markdown(f'<div class="risk-meter"><div class="risk-fill" style="width: {risk_percentage}%;"></div></div>', unsafe_allow_html=True)
-        st.caption(f"Estimated risk level: {risk_percentage:.1f}%")
-        
-        # Feature importance visualization
-        st.markdown("### Key Factors in Prediction")
-        factors = [
-            {"name": "Age", "importance": min(abs(age-50)/50, 1.0)},
-            {"name": "Cholesterol", "importance": min(abs(chol-200)/400, 1.0)},
-            {"name": "Max Heart Rate", "importance": min(abs(thalach-150)/100, 1.0)},
-            {"name": "Chest Pain", "importance": cp/3},
-            {"name": "ST Depression", "importance": min(oldpeak/5, 1.0)},
-            {"name": "Exercise Angina", "importance": exang}
-        ]
-        
-        # Sort by importance
-        factors.sort(key=lambda x: x["importance"], reverse=True)
-        
-        for factor in factors[:3]:
-            importance_percentage = factor["importance"] * 100
-            st.markdown(f"**{factor['name']}**")
-            st.markdown(f'<div class="feature-bar" style="width: {importance_percentage}%"></div>', unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            st.markdown("### 💡 Preventive Care Tips")
+            st.markdown("""
+            - Get annual health check-ups
+            - Monitor blood pressure and cholesterol levels
+            - Maintain healthy BMI (18.5-24.9)
+            - Practice 30 minutes of moderate exercise daily
+            - Eat heart-healthy foods (fruits, vegetables, whole grains)
+            """)
 
 st.markdown("</div>", unsafe_allow_html=True)
+
+st.markdown("</div>", unsafe_allow_html=True)
+
+
 
 # ---------------------------
 # Model Information Section
@@ -575,25 +567,19 @@ with col2:
             <div class="metric-label">F1 Score</div>
         </div>
         """, unsafe_allow_html=True)
+st.markdown("</div>", unsafe_allow_html=True)        
 
-# Feature importance explanation
+
+
+
+# ---------------------------
+# Footer with Disclaimer
+# ---------------------------
 st.markdown("---")
-st.markdown("**Key Features Used by the Model:**")
 st.markdown("""
-- **Age:** Patient's age in years
-- **Sex:** Patient's gender (Male/Female)
-- **Chest Pain Type:** Type of chest pain experienced
-- **Resting Blood Pressure:** Blood pressure at rest (mm Hg)
-- **Cholesterol:** Serum cholesterol level (mg/dl)
-- **Fasting Blood Sugar:** Blood sugar after fasting (>120 mg/dl)
-- **Resting ECG:** Electrocardiographic results at rest
-- **Max Heart Rate:** Maximum heart rate achieved
-- **Exercise Induced Angina:** Chest pain during exercise
-- **Oldpeak:** ST depression induced by exercise
-- **Slope:** Slope of the peak exercise ST segment
-- **Major Vessels:** Number of major vessels colored by fluoroscopy
-- **Thalassemia:** Blood disorder measurement
-""")
-
-st.markdown("</div>", unsafe_allow_html=True)
-st.markdown("</div>", unsafe_allow_html=True)
+<div style='text-align: center; color: #6c757d; font-size: 0.9rem;'>
+    <p><strong>Disclaimer:</strong> This prediction is based on machine learning analysis and should not replace professional medical advice. 
+    Always consult qualified healthcare providers for diagnosis and treatment.</p>
+    <p>© 2025 Heart Disease Prediction System | For educational purposes only</p>
+</div>
+""", unsafe_allow_html=True)
